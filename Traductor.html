@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Traductor Binario</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://kit.fontawesome.com/4122e002ed.js" crossorigin="anonymous"></script>
+</head>
+<body>
+  <header>
+    <div class="logo-container" id="helpBtn">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Ayuda</span>
+    </div>
+    <div class="logo-container" id="wordListBtn">
+      <i class="fa-solid fa-circle-info"></i>
+      <span>Palabras Admitidas</span>
+    </div>
+  </header>
+
+  <h1>Traductor de Texto a Binario y Binario a Texto</h1>
+
+  <div class="container">
+    <div class="input-container">
+      <h2>Introduce texto para convertir a binario</h2>
+      <textarea id="inputText" placeholder="Introduce texto"></textarea>
+      <br><br>
+      <button id="textToBinBtn">Texto a Binario</button>
+      <br><br>
+      <div class="output-container">
+        <textarea id="outputText" readonly placeholder="Resultado"></textarea>
+      </div>
+      <p id="validationMessage"></p>
+    </div>
+
+    <br><br>
+    <div class="input-container">
+      <h2>Introduce binario para convertir a texto</h2>
+      <textarea id="inputBinary" placeholder="Introduce binario"></textarea>
+      <br><br>
+      <button id="binToTextBtn">Binario a Texto</button>
+      <br><br>
+      <div class="output-container">
+        <textarea id="outputBinary" readonly placeholder="Resultado"></textarea>
+      </div>
+      <p id="validationMessageBinary"></p>
+    </div>
+  </div>
+
+  <div class="analysis-container">
+    <div class="analysis-section">
+      <h2>Análisis Léxico</h2>
+      <pre id="lexicalAnalysis"></pre>
+      <pre id="lexicalAnalysisCode"></pre>
+    </div>
+    <div class="analysis-section">
+      <h2>Análisis Sintáctico</h2>
+      <pre id="syntacticAnalysis"></pre>
+      <pre id="syntacticAnalysisCode"></pre>
+    </div>
+  </div>
+
+  <script src="trad.js"></script>
+</body>
+</html>

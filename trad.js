@@ -1,4 +1,6 @@
 let spanishWords = [];
+let currentTheme = 'dark';
+const MAX_HISTORY_ITEMS = 10;
 
 // Función para cargar las palabras desde el archivo listado-general.txt
 async function loadSpanishWords() {
@@ -35,6 +37,7 @@ document.getElementById("textToBinBtn").addEventListener("click", function() {
     validateWord(inputText, document.getElementById("validationMessage"));
     performLexicalAnalysis(inputText);
     performSemanticAnalysis(inputText);
+    saveToHistory(inputText, binaryResult, 'Texto a Binario');
   }
 });
 
@@ -58,6 +61,7 @@ document.getElementById("binToTextBtn").addEventListener("click", function() {
       validateWord(textResult, document.getElementById("validationMessageBinary"));
       performLexicalAnalysis(textResult);
       performSemanticAnalysis(textResult);
+      saveToHistory(inputBinary, textResult, 'Binario a Texto');
     }
   } catch (error) {
     console.error("Error al convertir:", error);
@@ -335,3 +339,248 @@ document.getElementById('toggleAnalysisBtn').addEventListener('click', function(
     toggleText.textContent = 'Ocultar análisis';
   }
 });
+
+// Funciones de utilidad
+function showNotification(message, type = 'success') {
+  const notification = document.createElement('div');
+  notification.className = `notification ${type}`;
+  notification.textContent = message;
+  document.body.appendChild(notification);
+  
+  setTimeout(() => {
+    notification.remove();
+  }, 3000);
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showNotification('¡Copiado al portapapeles!');
+  }).catch(() => {
+    showNotification('Error al copiar', 'error');
+  });
+}
+
+function saveToHistory(input, output, type) {
+  const history = JSON.parse(localStorage.getItem('translationHistory') || '[]');
+  history.unshift({
+    input,
+    output,
+    type,
+    timestamp: new Date().toISOString()
+  });
+  
+  if (history.length > MAX_HISTORY_ITEMS) {
+    history.pop();
+  }
+  
+  localStorage.setItem('translationHistory', JSON.stringify(history));
+  updateHistoryUI();
+}
+
+function updateHistoryUI() {
+  const historyList = document.getElementById('historyList');
+  const history = JSON.parse(localStorage.getItem('translationHistory') || '[]');
+  
+  historyList.innerHTML = history.map((item, index) => `
+    <div class="history-item" data-index="${index}">
+      <div class="history-item-header">
+        <span>${item.type}</span>
+        <span>${new Date(item.timestamp).toLocaleString()}</span>
+      </div>
+      <div class="history-item-content">
+        <div>Entrada: ${item.input}</div>
+        <div>Salida: ${item.output}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function toggleTheme() {
+  const root = document.documentElement;
+  if (currentTheme === 'dark') {
+    root.style.setProperty('--background-color', '#f5f5f5');
+    root.style.setProperty('--surface-color', '#ffffff');
+    root.style.setProperty('--text-color', '#333333');
+    currentTheme = 'light';
+    document.querySelector('#themeToggle i').className = 'fa-solid fa-sun';
+  } else {
+    root.style.setProperty('--background-color', '#1a1a1a');
+    root.style.setProperty('--surface-color', '#2d2d2d');
+    root.style.setProperty('--text-color', '#ffffff');
+    currentTheme = 'dark';
+    document.querySelector('#themeToggle i').className = 'fa-solid fa-moon';
+  }
+  localStorage.setItem('theme', currentTheme);
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+  // Restaurar tema
+  const savedTheme = localStorage.getItem('theme') || 'dark';
+  if (savedTheme === 'light') {
+    toggleTheme();
+  }
+  
+  // Botones de copiar
+  document.querySelectorAll('.copy-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const targetId = button.dataset.target;
+      const text = document.getElementById(targetId).value;
+      copyToClipboard(text);
+    });
+  });
+  
+  // Cambio de tema
+  document.getElementById('themeToggle').addEventListener('click', toggleTheme);
+  
+  // Limpiar historial
+  document.getElementById('clearHistory').addEventListener('click', () => {
+    localStorage.removeItem('translationHistory');
+    updateHistoryUI();
+    showNotification('Historial limpiado');
+  });
+  
+  // Cargar historial
+  updateHistoryUI();
+  
+  // Eventos de historial
+  document.getElementById('historyList').addEventListener('click', (e) => {
+    const historyItem = e.target.closest('.history-item');
+    if (historyItem) {
+      const index = historyItem.dataset.index;
+      const history = JSON.parse(localStorage.getItem('translationHistory') || '[]');
+      const item = history[index];
+      
+      if (item.type === 'Texto a Binario') {
+        document.getElementById('inputText').value = item.input;
+        document.getElementById('outputText').value = item.output;
+        document.getElementById('textToBinaryTab').click();
+      } else {
+        document.getElementById('inputBinary').value = item.input;
+        document.getElementById('outputBinary').value = item.output;
+        document.getElementById('binaryToTextTab').click();
+      }
+    }
+  });
+});
+
+// Funciones de validación en tiempo real
+function updateTextInfo(input, charCountId, caseInfoId) {
+  const text = input.value;
+  const charCount = text.length;
+  document.getElementById(charCountId).textContent = `${charCount} caracteres`;
+  
+  if (caseInfoId) {
+    const hasUpperCase = /[A-Z]/.test(text);
+    const hasLowerCase = /[a-z]/.test(text);
+    let caseInfo = '';
+    
+    if (hasUpperCase && hasLowerCase) {
+      caseInfo = 'Mezcla de mayúsculas y minúsculas';
+    } else if (hasUpperCase) {
+      caseInfo = 'Todo en mayúsculas';
+    } else if (hasLowerCase) {
+      caseInfo = 'Todo en minúsculas';
+    }
+    
+    document.getElementById(caseInfoId).textContent = caseInfo;
+  }
+}
+
+function updateBinaryInfo(input, charCountId, formatInfoId) {
+  const binary = input.value;
+  const charCount = binary.length;
+  document.getElementById(charCountId).textContent = `${charCount} caracteres`;
+  
+  if (formatInfoId) {
+    const isValid = isValidBinary(binary);
+    const formatInfo = isValid ? 'Formato binario válido' : 'Formato binario inválido';
+    document.getElementById(formatInfoId).textContent = formatInfo;
+    document.getElementById(formatInfoId).style.color = isValid ? '#00ff00' : '#ff4444';
+  }
+}
+
+function updateByteCount(output, byteCountId) {
+  const binary = output.value;
+  const bytes = binary.split(' ').length;
+  document.getElementById(byteCountId).textContent = `${bytes} bytes`;
+}
+
+// Event Listeners para validación en tiempo real
+document.getElementById('inputText').addEventListener('input', function() {
+  updateTextInfo(this, 'textCharCount', 'textCaseInfo');
+});
+
+document.getElementById('inputBinary').addEventListener('input', function() {
+  updateBinaryInfo(this, 'binaryCharCount', 'binaryFormatInfo');
+});
+
+// Atajos de teclado
+document.addEventListener('keydown', function(e) {
+  if (e.ctrlKey && e.key === 'Enter') {
+    const activeTab = document.querySelector('.tab-content.active');
+    if (activeTab.id === 'textToBinaryContent') {
+      document.getElementById('textToBinBtn').click();
+    } else {
+      document.getElementById('binToTextBtn').click();
+    }
+  }
+});
+
+// Modificar las funciones existentes para actualizar la información
+function convertTextToBinary() {
+  var inputText = document.getElementById("inputText").value.trim();
+  if (!inputText) {
+    showNotification('Por favor, introduce algún texto', 'error');
+    return;
+  }
+  
+  if (containsNumbers(inputText)) {
+    document.getElementById("validationMessage").textContent = "El texto no debe contener números.";
+    document.getElementById("validationMessage").className = "invalid";
+    return;
+  }
+  
+  var binaryResult = textToBinary(inputText);
+  document.getElementById("outputText").value = binaryResult;
+  updateByteCount(document.getElementById("outputText"), 'binaryByteCount');
+  validateWord(inputText, document.getElementById("validationMessage"));
+  performLexicalAnalysis(inputText);
+  performSemanticAnalysis(inputText);
+  saveToHistory(inputText, binaryResult, 'Texto a Binario');
+}
+
+function convertBinaryToText() {
+  var inputBinary = document.getElementById("inputBinary").value.trim();
+  if (!inputBinary) {
+    showNotification('Por favor, introduce código binario', 'error');
+    return;
+  }
+  
+  if (!isValidBinary(inputBinary)) {
+    document.getElementById("validationMessageBinary").textContent = "El formato binario no es válido. Debe contener solo 0s y 1s separados por espacios.";
+    document.getElementById("validationMessageBinary").className = "invalid";
+    return;
+  }
+  
+  try {
+    var textResult = binaryToText(inputBinary);
+    document.getElementById("outputBinary").value = textResult;
+    document.getElementById("textResultCount").textContent = `${textResult.length} caracteres`;
+    
+    if (containsNumbers(textResult)) {
+      document.getElementById("validationMessageBinary").textContent = "El texto resultante no debe contener números.";
+      document.getElementById("validationMessageBinary").className = "invalid";
+      return;
+    }
+    
+    validateWord(textResult, document.getElementById("validationMessageBinary"));
+    performLexicalAnalysis(textResult);
+    performSemanticAnalysis(textResult);
+    saveToHistory(inputBinary, textResult, 'Binario a Texto');
+  } catch (error) {
+    console.error("Error al convertir:", error);
+    document.getElementById("validationMessageBinary").textContent = "Error al procesar el código binario.";
+    document.getElementById("validationMessageBinary").className = "invalid";
+  }
+}

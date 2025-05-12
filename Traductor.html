@@ -17,6 +17,10 @@
       <i class="fa-solid fa-list"></i>
       <span>Palabras Admitidas</span>
     </div>
+    <div class="logo-container" id="themeToggle">
+      <i class="fa-solid fa-moon"></i>
+      <span>Cambiar Tema</span>
+    </div>
   </header>
 
   <h1>Traductor de Texto a Binario y Binario a Texto</h1>
@@ -33,25 +37,71 @@
     <div class="tab-content active" id="textToBinaryContent">
       <h2>Introduce texto para convertir a binario</h2>
       <textarea id="inputText" placeholder="Introduce texto..."></textarea>
-      <button class="action-button" id="textToBinBtn">Convertir a Binario</button>
+      <div class="text-info">
+        <span id="textCharCount">0 caracteres</span>
+        <span id="textCaseInfo"></span>
+      </div>
+      <button class="action-button" id="textToBinBtn">
+        <i class="fa-solid fa-exchange-alt"></i>
+        Convertir a Binario
+      </button>
       <div class="output-container">
         <h3>Resultado:</h3>
         <textarea id="outputText" readonly placeholder="Resultado en binario"></textarea>
+        <div class="text-info">
+          <span id="binaryByteCount">0 bytes</span>
+        </div>
+        <button class="copy-button" data-target="outputText">
+          <i class="fa-solid fa-copy"></i>
+          Copiar
+        </button>
       </div>
       <p id="validationMessage"></p>
+      <div class="shortcut-info">
+        <i class="fa-solid fa-keyboard"></i>
+        Presiona Ctrl + Enter para convertir
+      </div>
     </div>
 
     <!-- Tab de Binario a Texto -->
     <div class="tab-content" id="binaryToTextContent">
       <h2>Introduce binario para convertir a texto</h2>
       <textarea id="inputBinary" placeholder="Introduce código binario separado por espacios..."></textarea>
-      <button class="action-button" id="binToTextBtn">Convertir a Texto</button>
+      <div class="text-info">
+        <span id="binaryCharCount">0 caracteres</span>
+        <span id="binaryFormatInfo"></span>
+      </div>
+      <button class="action-button" id="binToTextBtn">
+        <i class="fa-solid fa-exchange-alt"></i>
+        Convertir a Texto
+      </button>
       <div class="output-container">
         <h3>Resultado:</h3>
         <textarea id="outputBinary" readonly placeholder="Resultado en texto"></textarea>
+        <div class="text-info">
+          <span id="textResultCount">0 caracteres</span>
+        </div>
+        <button class="copy-button" data-target="outputBinary">
+          <i class="fa-solid fa-copy"></i>
+          Copiar
+        </button>
       </div>
       <p id="validationMessageBinary"></p>
+      <div class="shortcut-info">
+        <i class="fa-solid fa-keyboard"></i>
+        Presiona Ctrl + Enter para convertir
+      </div>
     </div>
+  </div>
+
+  <!-- Historial de traducciones -->
+  <div class="container history-container" id="historyContainer">
+    <h2>Historial de Traducciones</h2>
+    <div id="historyList"></div>
+    <button class="action-button" id="clearHistory">
+      <i class="fa-solid fa-trash"></i>
+      Limpiar Historial
+    </button>
   </div>
 
   <!-- Botón para mostrar/ocultar análisis -->
@@ -62,7 +112,7 @@
     </button>
   </div>
 
-  <!-- Contenedor de análisis (inicialmente oculto) -->
+  <!-- Contenedor de análisis -->
   <div class="analysis-wrapper" id="analysisWrapper">
     <div class="analysis-container">
       <div class="analysis-section">

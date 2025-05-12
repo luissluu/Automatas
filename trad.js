@@ -76,29 +76,44 @@ var helpBtn = document.getElementById('helpBtn');
 // Agregar un evento de clic al botón de ayuda
 helpBtn.addEventListener('click', function() {
   // Mostrar la ventana modal
-  showModal('ayuda.jpg');
+  showModal('ayuda.png');
 });
 
 // Función para mostrar la ventana modal con la imagen
 function showModal(imagePath) {
-  // Crear elemento de imagen
-  var img = document.createElement('img');
-  img.src = imagePath;
-
   // Crear contenedor de la ventana modal
   var modal = document.createElement('div');
   modal.classList.add('modal');
 
-  // Agregar la imagen al contenedor modal
-  modal.appendChild(img);
+  // Crear elemento de imagen
+  var img = document.createElement('img');
+  img.src = imagePath;
 
-  // Agregar la ventana modal al cuerpo del documento
-  document.body.appendChild(modal);
+  // Botón de cierre
+  var closeBtn = document.createElement('span');
+  closeBtn.className = 'modal-close';
+  closeBtn.innerHTML = '&times;';
 
-  // Agregar evento de clic al contenedor modal para cerrarlo al hacer clic fuera de él
-  modal.addEventListener('click', function() {
+  // Cerrar modal al hacer clic en el botón o fuera de la imagen
+  closeBtn.onclick = closeModal;
+  modal.onclick = function(e) {
+    if (e.target === modal) closeModal();
+  };
+
+  // Cerrar con Escape
+  function closeModal() {
     document.body.removeChild(modal);
-  });
+    document.removeEventListener('keydown', escListener);
+  }
+  function escListener(e) {
+    if (e.key === 'Escape') closeModal();
+  }
+  document.addEventListener('keydown', escListener);
+
+  // Añadir elementos al modal
+  modal.appendChild(img);
+  modal.appendChild(closeBtn);
+  document.body.appendChild(modal);
 }
 
 // Función para verificar si un texto binario es válido

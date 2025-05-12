@@ -23,6 +23,46 @@ document.addEventListener('DOMContentLoaded', function() {
   if (analysisWrapper) {
     analysisWrapper.style.maxHeight = '0px';
   }
+
+  // Botón para limpiar solo la sección de texto a binario
+  const clearTextBtn = document.getElementById('clearAllBtnText');
+  if (clearTextBtn) {
+    clearTextBtn.addEventListener('click', function() {
+      document.getElementById('inputText').value = '';
+      document.getElementById('outputText').value = '';
+      document.getElementById('validationMessage').textContent = '';
+      document.getElementById('validationMessage').className = '';
+      document.getElementById('textCharCount').textContent = '0 caracteres';
+      document.getElementById('textCaseInfo').textContent = '';
+      document.getElementById('binaryByteCount').textContent = '0 bytes';
+      if(document.getElementById('lexicalAnalysis')) document.getElementById('lexicalAnalysis').textContent = '';
+      if(document.getElementById('lexicalAnalysisCode')) document.getElementById('lexicalAnalysisCode').textContent = '';
+      if(document.getElementById('syntacticAnalysis')) document.getElementById('syntacticAnalysis').textContent = '';
+      if(document.getElementById('syntacticAnalysisCode')) document.getElementById('syntacticAnalysisCode').textContent = '';
+      if(document.getElementById('semanticAnalysis')) document.getElementById('semanticAnalysis').textContent = '';
+      if(document.getElementById('semanticAnalysisCode')) document.getElementById('semanticAnalysisCode').textContent = '';
+    });
+  }
+
+  // Botón para limpiar solo la sección de binario a texto
+  const clearBinaryBtn = document.getElementById('clearAllBtnBinary');
+  if (clearBinaryBtn) {
+    clearBinaryBtn.addEventListener('click', function() {
+      document.getElementById('inputBinary').value = '';
+      document.getElementById('outputBinary').value = '';
+      document.getElementById('validationMessageBinary').textContent = '';
+      document.getElementById('validationMessageBinary').className = '';
+      document.getElementById('binaryCharCount').textContent = '0 caracteres';
+      document.getElementById('binaryFormatInfo').textContent = '';
+      document.getElementById('textResultCount').textContent = '0 caracteres';
+      if(document.getElementById('lexicalAnalysis')) document.getElementById('lexicalAnalysis').textContent = '';
+      if(document.getElementById('lexicalAnalysisCode')) document.getElementById('lexicalAnalysisCode').textContent = '';
+      if(document.getElementById('syntacticAnalysis')) document.getElementById('syntacticAnalysis').textContent = '';
+      if(document.getElementById('syntacticAnalysisCode')) document.getElementById('syntacticAnalysisCode').textContent = '';
+      if(document.getElementById('semanticAnalysis')) document.getElementById('semanticAnalysis').textContent = '';
+      if(document.getElementById('semanticAnalysisCode')) document.getElementById('semanticAnalysisCode').textContent = '';
+    });
+  }
 });
 
 // Función para convertir texto a binario
@@ -134,19 +174,45 @@ function binaryToText(binary) {
 // Función para validar si una palabra existe en español usando la lista cargada
 function validateWord(word, validationMessage) {
   const words = word.split(/\s+/).map(w => w.toLowerCase().trim());
-  console.log('Palabras ingresadas:', words);
-  
   const invalidWords = words.filter(w => w.length > 0 && !spanishWords.includes(w));
-  console.log('Palabras inválidas:', invalidWords);
-  
+
   if (invalidWords.length > 0) {
-    validationMessage.textContent = `La(s) siguiente(s) palabra(s) no es(son) válidas: "${invalidWords.join(', ')}", para más información da clic en la parte superior derecha en "Palabras Admitidas"`;
-    validationMessage.className = "invalid";
+    // No mostrar advertencia debajo del resultado
+    validationMessage.textContent = '';
+    validationMessage.className = '';
+    // Mostrar solo en el modal, con palabras resaltadas
+    const msg = `La(s) siguiente(s) palabra(s) no es(son) válidas: <span class=\"invalid-word\">${invalidWords.join(', ')}</span>, para más información da clic en la parte superior derecha en \"Palabras Admitidas\"`;
+    showAlertModal(msg);
   } else {
     validationMessage.textContent = "La(s) palabra(s) es(son) admitidas";
     validationMessage.className = "valid";
   }
   performSyntacticAnalysis(word, invalidWords);
+}
+
+// Modifico showAlertModal para aceptar HTML
+function showAlertModal(message) {
+  const modal = document.getElementById('alertModal');
+  const alertMessage = document.getElementById('alertMessage');
+  alertMessage.innerHTML = message; // Permitir HTML
+  modal.style.display = 'block';
+
+  const closeBtn = modal.querySelector('.close');
+  const acceptBtn = document.getElementById('acceptButton');
+
+  closeBtn.onclick = function() {
+    modal.style.display = 'none';
+  };
+
+  acceptBtn.onclick = function() {
+    modal.style.display = 'none';
+  };
+
+  window.onclick = function(event) {
+    if (event.target == modal) {
+      modal.style.display = 'none';
+    }
+  };
 }
 
 // Función para verificar si una cadena contiene números

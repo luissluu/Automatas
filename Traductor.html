@@ -35,7 +35,13 @@
   <div class="container">
     <!-- Tab de Texto a Binario -->
     <div class="tab-content active" id="textToBinaryContent">
-      <h2>Introduce texto para convertir a binario</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0;">Introduce texto para convertir a binario</h2>
+        <button class="action-button" id="clearAllBtnText">
+          <i class="fa-solid fa-eraser"></i>
+          Limpiar Todo
+        </button>
+      </div>
       <textarea id="inputText" placeholder="Introduce texto..."></textarea>
       <div class="text-info">
         <span id="textCharCount">0 caracteres</span>
@@ -65,7 +71,13 @@
 
     <!-- Tab de Binario a Texto -->
     <div class="tab-content" id="binaryToTextContent">
-      <h2>Introduce binario para convertir a texto</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <h2 style="margin: 0;">Introduce binario para convertir a texto</h2>
+        <button class="action-button" id="clearAllBtnBinary">
+          <i class="fa-solid fa-eraser"></i>
+          Limpiar Todo
+        </button>
+      </div>
       <textarea id="inputBinary" placeholder="Introduce código binario separado por espacios..."></textarea>
       <div class="text-info">
         <span id="binaryCharCount">0 caracteres</span>
@@ -130,6 +142,15 @@
         <pre id="semanticAnalysis"></pre>
         <pre id="semanticAnalysisCode"></pre>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal de Alerta -->
+  <div id="alertModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <p id="alertMessage"></p>
+      <button id="acceptButton">Aceptar</button>
     </div>
   </div>
 

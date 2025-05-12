@@ -14,50 +14,72 @@
       <span>Ayuda</span>
     </div>
     <div class="logo-container" id="wordListBtn">
-      <i class="fa-solid fa-circle-info"></i>
+      <i class="fa-solid fa-list"></i>
       <span>Palabras Admitidas</span>
     </div>
   </header>
 
   <h1>Traductor de Texto a Binario y Binario a Texto</h1>
 
+  <div class="switch-container">
+    <div class="switch">
+      <button class="switch-option active" id="textToBinaryTab">Texto a Binario</button>
+      <button class="switch-option" id="binaryToTextTab">Binario a Texto</button>
+    </div>
+  </div>
+
   <div class="container">
-    <div class="input-container">
+    <!-- Tab de Texto a Binario -->
+    <div class="tab-content active" id="textToBinaryContent">
       <h2>Introduce texto para convertir a binario</h2>
-      <textarea id="inputText" placeholder="Introduce texto"></textarea>
-      <br><br>
-      <button id="textToBinBtn">Texto a Binario</button>
-      <br><br>
+      <textarea id="inputText" placeholder="Introduce texto..."></textarea>
+      <button class="action-button" id="textToBinBtn">Convertir a Binario</button>
       <div class="output-container">
-        <textarea id="outputText" readonly placeholder="Resultado"></textarea>
+        <h3>Resultado:</h3>
+        <textarea id="outputText" readonly placeholder="Resultado en binario"></textarea>
       </div>
       <p id="validationMessage"></p>
     </div>
 
-    <br><br>
-    <div class="input-container">
+    <!-- Tab de Binario a Texto -->
+    <div class="tab-content" id="binaryToTextContent">
       <h2>Introduce binario para convertir a texto</h2>
-      <textarea id="inputBinary" placeholder="Introduce binario"></textarea>
-      <br><br>
-      <button id="binToTextBtn">Binario a Texto</button>
-      <br><br>
+      <textarea id="inputBinary" placeholder="Introduce código binario separado por espacios..."></textarea>
+      <button class="action-button" id="binToTextBtn">Convertir a Texto</button>
       <div class="output-container">
-        <textarea id="outputBinary" readonly placeholder="Resultado"></textarea>
+        <h3>Resultado:</h3>
+        <textarea id="outputBinary" readonly placeholder="Resultado en texto"></textarea>
       </div>
       <p id="validationMessageBinary"></p>
     </div>
   </div>
 
-  <div class="analysis-container">
-    <div class="analysis-section">
-      <h2>Análisis Léxico</h2>
-      <pre id="lexicalAnalysis"></pre>
-      <pre id="lexicalAnalysisCode"></pre>
-    </div>
-    <div class="analysis-section">
-      <h2>Análisis Sintáctico</h2>
-      <pre id="syntacticAnalysis"></pre>
-      <pre id="syntacticAnalysisCode"></pre>
+  <!-- Botón para mostrar/ocultar análisis -->
+  <div class="analysis-toggle">
+    <button id="toggleAnalysisBtn">
+      <span>Ver análisis</span>
+      <i class="fa-solid fa-chevron-down"></i>
+    </button>
+  </div>
+
+  <!-- Contenedor de análisis (inicialmente oculto) -->
+  <div class="analysis-wrapper" id="analysisWrapper">
+    <div class="analysis-container">
+      <div class="analysis-section">
+        <h2>Análisis Léxico</h2>
+        <pre id="lexicalAnalysis"></pre>
+        <pre id="lexicalAnalysisCode"></pre>
+      </div>
+      <div class="analysis-section">
+        <h2>Análisis Sintáctico</h2>
+        <pre id="syntacticAnalysis"></pre>
+        <pre id="syntacticAnalysisCode"></pre>
+      </div>
+      <div class="analysis-section">
+        <h2>Análisis Semántico</h2>
+        <pre id="semanticAnalysis"></pre>
+        <pre id="semanticAnalysisCode"></pre>
+      </div>
     </div>
   </div>
 

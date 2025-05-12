@@ -3,6 +3,7 @@ body {
   background-color: #454343;
   margin: 0;
   padding: 0;
+  color: #fff;
 }
 
 header {
@@ -17,6 +18,8 @@ header {
 .logo-container {
   display: flex;
   align-items: center;
+  cursor: pointer;
+  margin-left: 15px;
 }
 
 .logo-container i {
@@ -48,10 +51,6 @@ textarea {
   resize: none;
 }
 
-.buttons {
-  text-align: center;
-}
-
 button {
   padding: 10px 20px;
   margin: 0 10px;
@@ -60,53 +59,157 @@ button {
   background-color: #29a730;
   color: #fff;
   cursor: pointer;
+  transition: background-color 0.3s;
 }
 
 button:hover {
   background-color: #363c43;
 }
 
-#outputText {
+.action-button {
+  display: block;
+  width: 200px;
+  margin: 20px auto;
+}
+
+.switch-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.switch {
+  display: flex;
+  background-color: #444;
+  border-radius: 30px;
+  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+.switch-option {
+  padding: 12px 25px;
+  background-color: #444;
+  color: #ccc;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.switch-option.active {
+  background-color: #29a730;
+  color: white;
+}
+
+.tab-content {
+  display: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: all 0.3s ease;
+}
+
+.tab-content.active {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+  animation: fadeIn 0.5s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.output-container {
   margin-top: 20px;
 }
 
-.input-container {
-  position: relative;
+#validationMessage, 
+#validationMessageBinary {
+  padding: 10px;
+  margin-top: 10px;
+  border-radius: 5px;
+  font-weight: bold;
 }
 
-.input-container button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  left: 50%;
-  transform: translateX(-50%);
+.valid {
+  background-color: rgba(0, 128, 0, 0.2);
+  color: #00ff00;
+}
+
+.invalid {
+  background-color: rgba(255, 0, 0, 0.2);
+  color: #ff9999;
+}
+
+/* Estilos para el botón de análisis */
+.analysis-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 20px 0;
+}
+
+.analysis-toggle button {
+  background-color: #363c43;
+  padding: 10px 25px;
+  border-radius: 30px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: bold;
+  transition: all 0.3s ease;
+}
+
+.analysis-toggle button:hover {
+  background-color: #29a730;
+}
+
+/* Estilos para el contenedor de análisis */
+.analysis-wrapper {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.5s ease;
+}
+
+.analysis-wrapper.open {
+  max-height: 2000px;
 }
 
 .analysis-container {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   margin: 20px auto;
-  max-width: 800px;
+  max-width: 1200px; /* Ampliado para acomodar 3 columnas */
+  flex-wrap: wrap;
 }
 
 .analysis-section {
-  width: 45%;
-  background-color: #fff;
-  padding: 20px;
+  flex: 1;
+  min-width: 30%; /* Para que se distribuyan en 3 columnas */
+  margin: 0 10px;
+  background-color: #555;
+  padding: 15px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .analysis-section h2 {
   text-align: center;
+  color: #fff;
+  font-size: 18px;
+  margin-bottom: 15px;
 }
 
 .analysis-section pre {
-  background-color: #f4f4f4;
+  background-color: #444;
   padding: 10px;
   border-radius: 5px;
   white-space: pre-wrap;
   word-wrap: break-word;
+  color: #ccc;
+  font-size: 14px;
+  height: 200px;
+  overflow-y: auto;
 }
 
 /* Estilos para la ventana modal */
@@ -126,4 +229,16 @@ button:hover {
 .modal img {
   max-width: 80%;
   max-height: 80%;
+}
+
+/* Responsive para pantallas pequeñas */
+@media (max-width: 900px) {
+  .analysis-container {
+    flex-direction: column;
+  }
+  
+  .analysis-section {
+    width: 90%;
+    margin: 10px auto;
+  }
 }
